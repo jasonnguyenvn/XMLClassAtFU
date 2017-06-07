@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
@@ -27,12 +28,15 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 /**
  *
  * @author Hau
  */
 public class SearchServlet extends HttpServlet {
+    
+    private final String xmlFile = "WEB-INF/studentAccounts.xml";
     
     private final String searchPage = "search.jsp";
 
@@ -55,6 +59,14 @@ public class SearchServlet extends HttpServlet {
             HttpSession session = request.getSession(false);
             if (session != null) {
                 Document doc = (Document) session.getAttribute("DOMTREE");
+                if (doc == null) {
+                    
+                    String realPath = getServletContext().getRealPath("/");
+                    String xmlFilePath = realPath  + xmlFile;
+                    doc = Utils.XMLUtilities.parseDomFromFile(xmlFilePath);
+                    
+                    session.setAttribute("DOMTREE", doc);
+                }
                 if (doc != null) {
                     String exp = "//student[contains(address, '"
                             + searchValue
@@ -119,6 +131,10 @@ public class SearchServlet extends HttpServlet {
         } catch (XPathExpressionException ex) {
             Logger.getLogger(SearchServlet.class.getName()).log(Level.SEVERE, null, ex);
         } catch (NumberFormatException ex) {
+            Logger.getLogger(SearchServlet.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParserConfigurationException ex) {
+            Logger.getLogger(SearchServlet.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SAXException ex) {
             Logger.getLogger(SearchServlet.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             
