@@ -7,6 +7,7 @@ package Utils;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.util.Map;
 import javax.xml.parsers.DocumentBuilder;
@@ -14,6 +15,10 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
@@ -98,6 +103,65 @@ public class XMLUtilities implements Serializable {
         parser.parse(xmlFilePath, handler);
     }
     
+    
+    public static XMLStreamReader parseFileToStAXCursor(InputStream is) 
+            throws XMLStreamException {
+        XMLInputFactory factory = XMLInputFactory.newInstance();
+        
+        XMLStreamReader reader = factory.createXMLStreamReader(is);
+        
+        return reader;
+    }
+    
+    
+    public static String getAttributeValue(String elementName,
+            String namespaceURI,
+            String attributeName, XMLStreamReader reader) 
+            throws XMLStreamException {
+        if (reader == null) {
+            return null;
+        }
+        
+        while (reader.hasNext()) {
+            int cursor = reader.getEventType();
+            if (cursor == XMLStreamConstants.START_ELEMENT) {
+                String tagName = reader.getLocalName();
+                if (tagName.equals(elementName)) {
+                    String result = reader.getAttributeValue(namespaceURI, 
+                            attributeName);
+                    return result;
+                }
+            }
+            reader.next();
+        }
+        
+        return null;
+    }
+    
+    
+    public static String getTextContent(String elementName, XMLStreamReader reader)
+            throws XMLStreamException {
+        if (reader == null) {
+            return null;
+        }
+        
+        while (reader.hasNext()) {
+            int cursor = reader.getEventType();
+            if (cursor == XMLStreamConstants.START_ELEMENT) {
+                String tagName = reader.getLocalName();
+                if (tagName.equals(elementName)) {
+                    reader.next();
+                    String result = reader.getText();
+                    reader.nextTag(); // go to end Element;
+                    
+                    return result;
+                }
+            }
+            reader.next();
+        }
+        
+        return null;
+    }
     
     
     

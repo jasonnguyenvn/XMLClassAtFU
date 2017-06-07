@@ -28,6 +28,10 @@
         <servlet-name>LoginSaxServlet</servlet-name>
         <servlet-class>servlets.LoginSaxServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>LoginStAXServlet</servlet-name>
+        <servlet-class>servlets.LoginStAXServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>DispatchServlet</servlet-name>
         <url-pattern>/DispatchServlet</url-pattern>
@@ -55,6 +59,10 @@
     <servlet-mapping>
         <servlet-name>LoginSaxServlet</servlet-name>
         <url-pattern>/LoginSaxServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>LoginStAXServlet</servlet-name>
+        <url-pattern>/LoginStAXServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

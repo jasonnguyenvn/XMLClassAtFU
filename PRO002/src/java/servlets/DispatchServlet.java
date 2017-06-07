@@ -19,7 +19,8 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class DispatchServlet extends HttpServlet {
 
-    private final String LoginServlet = "LoginSaxServlet";
+    //private final String LoginServlet = "LoginSaxServlet";
+     private final String LoginServlet = "LoginStAXServlet";
     private final String SearchServlet = "SearchServlet";
     private final String DeleteServlet = "DeleteServlet";
     private final String UpdateServlet = "UpdateServlet";
